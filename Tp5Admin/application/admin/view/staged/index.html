@@ -1,0 +1,108 @@
+<div class="page-content">
+   
+    <div class="page-header">
+        <h1>
+            数据查询
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                手机分期
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <form name="formSearch" class="form-group form-inline" method="POST" action="{{:url('index')}}">
+        <div class="input-group">
+            <span class="input-group-addon">VIP</span>
+            <input type="text" placeholder="VIP" name="vip" class="input-small" value="{{$reqData.vip}}">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">ARPU</span>
+            <input type="text" name="egtArpu" placeholder=">=" class="input-small" value="{{$reqData.egtArpu}}">-
+            <input type="text" name="ltArpu" placeholder="<" class="input-small" value="{{$reqData.ltArpu}}">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">开卡日期</span>
+            <input type="text" name="egtYear" placeholder=">=" value="{{$reqData.egtYear}}">-
+            <input type="text" name="ltYear" placeholder="<" value="{{$reqData.ltYear}}">
+        </div>
+        <p>
+        <div class="input-group">
+            <span class="input-group-addon">MOU</span>
+            <input type="text" name="egtMou" placeholder=">=" class="input-small" value="{{$reqData.egtMou}}">-
+            <input type="text" name="ltMou" placeholder="<" class="input-small" value="{{$reqData.ltMou}}">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">DOU</span>
+            <input type="text" name="egtDou" placeholder=">=" class="input-small" value="{{$reqData.egtDou}}">-
+            <input type="text" name="ltDou" placeholder="<" class="input-small" value="{{$reqData.ltDou}}">
+        </div>
+        <div class="input-group">
+            <input type="text" name="phone" placeholder="电话号码" value="{{$reqData.phone}}">
+        </div>
+        {{:widget('Toolbar/select',['name'=>'abnormal', 'arr'=>[0=>'正常',1=>'异常',-1=>'=ALL='], 'select'=>$reqData.abnormal])}}
+        <input type="submit" value="Submit" class="btn btn-sm btn-info">
+        </p>
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <table id="simple-table" class="table  table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </th>
+                                <th class="detail-col">up_id</th>
+                                <th>电话</th>
+                                <th>开卡日期</th>
+                                <th>VIP</th>
+                                <th>套餐</th>
+                                <th>MOU</th>
+                                <th>DOU</th>
+                                <th>ARPU</th>
+                                <th>终端设备</th>
+                                <th>终端月数</th>
+                                <th>保底套餐</th>
+                                <th>分拉状态</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {{volist name="lists" id="vo"}}
+                            <tr>
+                                <td class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </td>
+                                <td>{{$vo.up_id}}</td>
+                                <td>{{$vo.up_phone}}</td>
+                                <td>{{$vo.up_open_date}}</td>
+                                <td>{{$vo.up_vip}}</td>
+                                <td>{{$vo.up_meal}}</td>
+                                <td>{{$vo.up_MOU}}</td>
+                                <td>{{$vo.up_DOU}}</td>
+                                <td>{{$vo.up_ARPU}}</td>
+                                <td>{{$vo.up_used_type}}</td>
+                                <td>{{$vo.up_used_month}}</td>
+                                <td>{{$vo.up_is_minimum}}</td>
+                                <td>{{$vo.up_abnormal}}</td>
+                            </tr>
+                            {{/volist}}
+                        </tbody>
+                    </table>
+                    {{notempty name="lists"}}
+                    {{$lists->render()}}
+                    {{/notempty}}
+                </div><!-- /.span -->
+            </div><!-- /.row -->
+             
+            <!-- PAGE CONTENT ENDS -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->

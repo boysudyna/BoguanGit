@@ -1,0 +1,79 @@
+<div class="page-content">
+   
+    <div class="page-header">
+        <h1>
+            数据查询
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                手机偏好
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <form name="formSearch" class="form-group" method="POST" action="{{:url('index')}}">
+        <input type="text" placeholder="电话号码" name="phone" value="{{$reqData.phone}}">
+        <input type="text" class="input-small" placeholder=">=手机个数" name="nums" value="{{$reqData.nums}}">
+        <input type="text" class="input-small" placeholder=">=苹果" name="apple" value="{{$reqData.apple}}">
+        <input type="text" class="input-small" placeholder=">=三星" name="sx" value="{{$reqData.sx}}">
+        <input type="text" class="input-small" placeholder=">=华为" name="hw" value="{{$reqData.hw}}">
+        <input type="text" class="input-small" placeholder=">=OPPO" name="oppo" value="{{$reqData.oppo}}">
+        <input type="text" class="input-small" placeholder=">=小米" name="xm" value="{{$reqData.xm}}">
+        <input type="submit" name="Submit" value="Submit" class="btn btn-sm btn-info">
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <table id="simple-table" class="table  table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </th>
+                                <th class="detail-col">up_id</th>
+                                <th>电话</th>
+                                <th>手机个数</th>
+                                <th width="200px;">使用详情</th>
+                                <th>是否异常</th>
+                                <th>苹果</th>
+                                <th>三星</th>
+                                <th>华为</th>
+                                <th>Oppo</th>
+                                <th>小米</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {{volist name="lists" id="vo"}}
+                            <tr>
+                                <td class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </td>
+                                <td>{{$vo.up_id}}</td>
+                                <td>{{$vo.up_phone}}</td>
+                                <td>{{$vo.up_nums}}</td>
+                                <td title="{{$vo.up_detail}}" height="60px;" style="display:block;overflow: hidden;">{{$vo.up_detail}}</td>
+                                <td>{{$vo.up_abnormal}}</td>
+                                <td>{{$vo.up_apple}}</td>
+                                <td>{{$vo.up_sx}}</td>
+                                <td>{{$vo.up_hw}}</td>
+                                <td>{{$vo.up_oppo}}</td>
+                                <td>{{$vo.up_xm}}</td>
+                            </tr>
+                            {{/volist}}
+                        </tbody>
+                    </table>
+                    {{$lists->render()}}
+                </div><!-- /.span -->
+            </div><!-- /.row -->
+             
+            <!-- PAGE CONTENT ENDS -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->

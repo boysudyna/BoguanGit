@@ -1,0 +1,84 @@
+<div class="page-content">
+   
+    <div class="page-header">
+        <h1>
+            数据查询
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                手机保障
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    {{if condition="$totalMoney"}}
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
+        当前查询总金额为：{{$totalMoney}}
+    </div>
+    {{/if}}
+    <form name="formSearch" class="form-inline form-group" method="POST" action="{{:url('index')}}">
+            <input type="text" placeholder="请输入要查询的月份" name="month">
+            <input type="text" placeholder="套餐" name="meal">
+            <button type="button" class="btn btn-sm btn-info" value="Search" name="Search" onclick="formSearch.submit();">Search</button> 
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <table id="simple-table" class="table  table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </th>
+                                <th class="detail-col">m_id</th>
+                                <th>电话</th>
+                                <th>运营商</th>
+                                <th class="hidden-480">开设日期</th>
+                                <th class="hidden-480">结束日期</th>
+                                <th>套餐号</th>
+                                <th>收费天数</th>
+                                <th>金额</th>
+                                <th>月份</th>
+                                <th>执行时间</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {{volist name="lists" id="vo"}}
+                            <tr>
+                                <td class="center">
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </td>
+                                <td>{{$vo.m_id}}</td>
+                                <td>{{$vo.m_phone}}</td>
+                                <td>{{$vo.m_city}}</td>
+                                <td>{{$vo.m_sdate}}</td>
+                                <td>{{$vo.m_edate}}</td>
+                                <td>{{$vo.m_name}}</td>
+                                <td>{{$vo.m_days}}</td>
+                                <td>{{$vo.m_money}}</td>
+                                <td>{{$vo.m_tag}}</td>
+                                <td>{{$vo.m_insdate}}</td>
+                            </tr>
+                            {{/volist}}
+                        </tbody>
+                    </table>
+                    {{notempty name="lists"}}
+                    {{$lists->render()}}
+                    {{/notempty}}
+                </div><!-- /.span -->
+            </div><!-- /.row -->
+             
+            <!-- PAGE CONTENT ENDS -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
