@@ -7,8 +7,6 @@
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
 // | Author: zhangyajun <448901948@qq.com>
-// |
-// | Author：sudyna Add 总条数 link:http://www.thinkphp.cn/topic/51394.html
 // +----------------------------------------------------------------------
 
 namespace think\paginator\driver;

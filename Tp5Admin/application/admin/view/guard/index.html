@@ -18,16 +18,18 @@
     </div>
     {{/if}}
     <form name="formSearch" class="form-inline form-group" method="POST" action="{{:url('index')}}">
-            <input type="text" placeholder="请输入要查询的月份" name="month">
-            <input type="text" placeholder="套餐" name="meal">
-            <button type="button" class="btn btn-sm btn-info" value="Search" name="Search" onclick="formSearch.submit();">Search</button> 
+        <input type="text" placeholder="电话号码" name="phone" value="{{$reqData.phone}}">
+        <input type="text" placeholder="请输入要查询的月份" name="month" value="{{$reqData.month}}">
+        <input type="text" placeholder="套餐号" name="meal" value="{{$reqData.meal}}">
+        <input type="submit" class="btn btn-sm btn-info" value="Search">
+        <input type="button" class="btn btn-sm btn-primary" value="export" data-toggle="modal" data-target="#myModal">
     </form>
     <div class="row">
         <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
             <div class="row">
                 <div class="col-xs-12">
-                    <table id="simple-table" class="table  table-bordered table-hover">
+                    <table id="simple-table" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th class="center">
@@ -81,4 +83,34 @@
             <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
     </div><!-- /.row -->
+
+    <!-- 导出选项框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">导出文件设置</h4>
+                </div>
+                <div class="modal-body">
+                    数据导出需要几分钟，确认导出吗?...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="dataExport()">确认导出</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 </div><!-- /.page-content -->
+
+<script type="text/javascript">
+    function dataExport() {
+        $('#myModal').modal('hide');
+        return false;
+        datas = $('.modal-body').val();
+        url = "{{:url('export')}}";
+        window.location.href = url;
+    }
+
+</script>

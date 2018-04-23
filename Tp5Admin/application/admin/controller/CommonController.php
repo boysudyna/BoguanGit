@@ -35,7 +35,7 @@ class CommonController extends Controller {
         }
 
         //记录日志
-        // $this->_addLog();
+        $this->_addLog();
     }
 
     /**

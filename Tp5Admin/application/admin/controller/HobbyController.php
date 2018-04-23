@@ -38,7 +38,7 @@ class HobbyController extends CommonController {
             $where['up_xm'] = array('egt', $data['xm']);
 
         // 分页传参数， ['query' => request()->param()] 或者 $parmas = request()->param(); $obj->appends($parmas)->render();
-        $lists = db("user_phonelog")->where($where)->order('up_id asc')->paginate(15, false, ['query' => request()->param()]);
+        $lists = db("user_phonelog")->where($where)->order('up_id asc')->paginate(10, false, ['query' => request()->param()]);
         $this->assign('lists', $lists);
         $this->assign('reqData', $data);
         return $this->fetch();

@@ -96,14 +96,14 @@ class Menu {
                     } else {
 
                         $html.='
-                            <li class = "' . $active . '">
-                            <a href = "' . $url . '">
-                            <i class = "menu-icon fa ' . $icon . '"></i>
-                            <span class = "menu-text"> ' . $title . ' </span>
-                            </a>
-                            <b class = "arrow"></b>
-                            </li>
-                            ';
+                    <li class = "' . $active . '">
+                    <a href = "' . $url . '">
+                    <i class = "menu-icon fa ' . $icon . '"></i>
+                    <span class = "menu-text"> ' . $title . ' </span>
+                    </a>
+                    <b class = "arrow"></b>
+                    </li>
+                    ';
                     }
                 }
             }
