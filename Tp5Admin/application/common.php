@@ -183,3 +183,61 @@ function encry_code($string, $operation = 'ENCODE', $key = '', $expiry = 0) {
         return $keyc . rtrim(strtr(base64_encode($result), '+/', '-_'), '=');
     }
 }
+
+/**
+ * 成功提示框，用来代替Tp自身的success函数
+ * @param  [type]  $msg  [description]
+ * @param  string  $url  [description]
+ * @param  integer $time [description]
+ * @return [type]        [description]
+ */
+function alert_success($msg, $url = 0, $time = 3) {
+    return layer_msg($msg, $url, $time, 6);
+}
+
+/**
+ * 成功失败框，用来代替Tp自身的error函数
+ * @param  [type]  $msg  [description]
+ * @param  string  $url  [description]
+ * @param  integer $time [description]
+ * @return [type]        [description]
+ */
+function alert_error($msg, $url = 0, $time = 3) {
+    return layer_msg($msg, $url, $time, 5);
+}
+
+/**
+ * layer的msg提示框
+ * @param  [type] $msg  [description]
+ * @param  [type] $url  [description]
+ * @param  [type] $time [description]
+ * @param  [type] $icon [description]
+ * @return [type]       [description]
+ */
+function layer_msg($msg, $url, $time, $icon) {
+    header("Content-Type:text/html; charset=utf-8");
+    $html = <<<SHTML
+    <script type="text/javascript" src="/static/ace1.4/assets/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/static/layer/layer.js"></script>
+    <script>
+    layer.msg('$msg', {icon:$icon, time:($time*1000)}, function(){
+        if($url) {
+            self.parent.location.href = '$url';
+        }
+    });
+    </script>
+SHTML;
+    return $html;
+}
+
+function js_alert($msg, $exit = 1) {
+    $html = <<<SHTML
+    <script>
+        alert('$msg');
+    </script>
+SHTML;
+    if($exit)
+        die($html);
+    else
+        echo $html;
+}

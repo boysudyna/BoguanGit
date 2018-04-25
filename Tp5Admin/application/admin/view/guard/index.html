@@ -17,11 +17,11 @@
         当前查询总金额为：{{$totalMoney}}
     </div>
     {{/if}}
-    <form name="formSearch" class="form-inline form-group" method="POST" action="{{:url('index')}}">
+    <form name="formSearch" id="formSearch" class="form-inline form-group" method="POST" action="{{:url('index')}}">
         <input type="text" placeholder="电话号码" name="phone" value="{{$reqData.phone}}">
         <input type="text" placeholder="请输入要查询的月份" name="month" value="{{$reqData.month}}">
         <input type="text" placeholder="套餐号" name="meal" value="{{$reqData.meal}}">
-        <input type="submit" class="btn btn-sm btn-info" value="Search">
+        <input type="submit" class="btn btn-sm btn-info" name="Search" value="Search">
         <input type="button" class="btn btn-sm btn-primary" value="export" data-toggle="modal" data-target="#myModal">
     </form>
     <div class="row">
@@ -97,20 +97,12 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="dataExport()">确认导出</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="$('#formSearch').attr('target', 'iframe_form');formSearch.submit();$('#myModal').modal('hide');$('#formSearch').removeAttr('target')">确认导出</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
 </div><!-- /.page-content -->
 
-<script type="text/javascript">
-    function dataExport() {
-        $('#myModal').modal('hide');
-        return false;
-        datas = $('.modal-body').val();
-        url = "{{:url('export')}}";
-        window.location.href = url;
-    }
-
-</script>
+ <!-- 让表单提交不刷新，模拟异步体验 -->
+<iframe name=iframe_form id="ifr" scrolling="no" style="display:none"></iframe>
