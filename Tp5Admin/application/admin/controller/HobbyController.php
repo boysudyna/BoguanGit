@@ -20,7 +20,10 @@ class HobbyController extends CommonController {
             $where['up_phone'] = $data['phone'];
 
         if($data['nums'])
-            $where['up_nums'] = array('egt', $data['nums']);
+            $where['up_nums'][] = array('egt', $data['nums']);
+
+        if($data['enums'])
+            $where['up_nums'][] = array('lt', $data['enums']);
 
         if($data['apple'])
             $where['up_apple'] = array('egt', $data['apple']);

@@ -192,7 +192,8 @@ function encry_code($string, $operation = 'ENCODE', $key = '', $expiry = 0) {
  * @return [type]        [description]
  */
 function alert_success($msg, $url = 0, $time = 3) {
-    return layer_msg($msg, $url, $time, 6);
+    echo layer_msg($msg, $url, $time, 6);
+    exit;
 }
 
 /**
@@ -203,7 +204,8 @@ function alert_success($msg, $url = 0, $time = 3) {
  * @return [type]        [description]
  */
 function alert_error($msg, $url = 0, $time = 3) {
-    return layer_msg($msg, $url, $time, 5);
+    echo layer_msg($msg, $url, $time, 5);
+    exit;
 }
 
 /**
@@ -221,7 +223,7 @@ function layer_msg($msg, $url, $time, $icon) {
     <script type="text/javascript" src="/static/layer/layer.js"></script>
     <script>
     layer.msg('$msg', {icon:$icon, time:($time*1000)}, function(){
-        if($url) {
+        if('$url') {
             self.parent.location.href = '$url';
         }
     });
@@ -240,4 +242,15 @@ SHTML;
         die($html);
     else
         echo $html;
+}
+
+
+function countScore($list) {
+    // $action = new application\admin\controller\StagedController();
+    // return $action->countScore($list);
+
+    // $loader = new \think\Loader();
+    // return $loader::action('StagedController\countScore', ['list'=>$list]);
+    
+    return action('StagedController\countScore', ['list'=>$list]); // View层：:action('StagedController/countScore', ['list'=>$vo])
 }

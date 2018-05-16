@@ -92,7 +92,7 @@ class GuardController extends CommonController {
             $begLine = $data['begLine'];
             $nums = $data['nums'] >= 1000 ? 1000 : $data['nums'];
             if(! is_file($dir.DS.$file)) {
-                alert_error('文件不存在！', url());
+                $this->error('文件不存在！', url());
             }
 
             $handle = fopen($dir.DS.$file, 'r');
@@ -101,16 +101,28 @@ class GuardController extends CommonController {
             while(!feof($handle)) {
                 $i ++;
                 $buffer = fgets($handle, 1024);
-                if($begLine && $i < $begLine)
+                if($begLine && $i <= $begLine)
                     continue;
+
                 if($phone) {
-                    // $str = preg_replace('/(\d+)|(\d+)|(\d+)|/', $phone, $buffer);
-                    $reg = "/^(\d+)\|(\d+)\|\d*(".$phone.")/";
-                    // $str = preg_match($reg, $buffer);
-                    if(preg_match($reg, $buffer)){
-                        $str = preg_replace("/^(\d+\|)(\d+\|)(\d*)(".$phone.")(\d*)/", '$1$2$3<font color="red">$4</font>$5', $buffer);
-                        $showStr .= $str . '<br />';
+                    if($nums && $nums >= ($i - $begLine)) {
+                        // $str = preg_replace('/(\d+)|(\d+)|(\d+)|/', $phone, $buffer);
+                        $reg = "/^(\d+)\|(\d+)\|\d*(".$phone.")/";
+                        if(preg_match($reg, $buffer)){
+                            $str = preg_replace("/^(\d+\|)(\d+\|)(\d*)(".$phone.")(\d*)/", '$1$2$3<font color="red">$4</font>$5', $buffer);
+                            $showStr .= $str . '<br />';
+                        }
+                    } else {
+                        // $str = preg_replace('/(\d+)|(\d+)|(\d+)|/', $phone, $buffer);
+                        $reg = "/^(\d+)\|(\d+)\|\d*(".$phone.")/";
+                        if(preg_match($reg, $buffer)){
+                            $str = preg_replace("/^(\d+\|)(\d+\|)(\d*)(".$phone.")(\d*)/", '$1$2$3<font color="red">$4</font>$5', $buffer);
+                            $showStr .= $str . '<br />';
+                        }
                     }
+                } else {
+                    if($nums && $nums >= ($i - $begLine))
+                        $showStr .= $buffer . '<br />';
                 }
             }
 
@@ -140,14 +152,62 @@ class GuardController extends CommonController {
             // } else {
             //     echo 'Error: Invalid file type.';
             // }
+            die('Close');
+            
+            $dirPath = ROOT_PATH . 'public' . DS . 'uploads'. DS . 'files';
             $config = array(
                 'ext' => 'txt, rar, docs',
             );
 
             $file = request()->file('file');
-            $info = $file->validate($config)->move(ROOT_PATH . 'public' . DS . 'uploads'. DS . 'files', '');
+            $info = $file->validate($config)->move($dirPath, '');
             if($info){
-                alert_success('上传成功', url('import'));
+                // 读取文件内容并写入
+                $fileUrl = $_FILES['file']['tmp_name'];
+                $fileName = $_FILES['file']['name'];
+
+                $sql = "INSERT IGNORE INTO `t_phone_draft_bak` VALUES ";
+                $handle  = fopen ($fileUrl, "r");
+                $i = $rr = 0;
+                while (!feof ($handle)) {
+                    $buffer  = fgets($handle, 1024);
+                    // 跳过第一条数据字段名
+                    if ($i == 0)  {
+                        $i ++;
+                        continue;
+                    }  
+
+                    $strings = trim($buffer);
+                    // 按 | 分割数据，最后一条总记录也要跳过
+                    $pos = strpos($strings, '|');
+                    if ($pos === false) {
+                        $i ++;
+                        continue;
+                    }
+
+                    $arr = explode('|', $strings);
+                    array_map(addslashes, $arr);
+                    array_push($arr, $fileName);
+                    array_push($arr, '3000-01-01 00:00:00');
+                    $arrStr .= '(\'' . implode('\',\'', $arr) . '\'),';
+                    if ($i % 1000 == 0) {
+                        $sqlStr = substr($sql . $arrStr, 0, -1);
+                        $rr += Db::execute($sqlStr);
+                        $arrStr = '';
+                    } 
+
+                    $i++;
+                }
+
+                if ($arrStr) {
+                    $sqlStr = substr($sql . $arrStr, 0, -1);
+                    $rr += Db::execute($sqlStr);
+                    $arrStr = '';
+                }
+
+                fclose ($handle);
+                $msg = '导入成功，并成功写入 '.$rr.' 条';
+                return json($msg);
             }else{
                 alert_error('失败：' . $file->getError());
             }
@@ -161,6 +221,56 @@ class GuardController extends CommonController {
         foreach($data as $col => $v) {
             $obj->setCellValue($code[$col].$i, $v);
         }
+    }
+
+
+    // $rowSize = 200; 
+    // $startRow = 2;//从第二行开始读取
+    // $endRow = $rowSize;
+    // $excel_orders = array();
+    // while (true) {
+    // 　　$excel_orders = $this->readFromExcel(dirname(dirname(HOME_PATH)).'/Upload/'.$newname, $startRow, $endRow);
+    //     if(empty($excel_orders)) {
+    //           break;
+    //     }
+    //     $startRow = $endRow + 1;
+    //     $endRow = $endRow + $rowSize;
+    // }
+    // 打开超大excel，防止缓存溢出
+    private function readFromExcel($excelFile, $startRow = 1, $endRow = 100) {
+        include_once './Core/Common/PHPExcel.php';
+        include_once './Core/Common/PHPExcelReadFilter.php';
+
+        $excelType = PHPExcel_IOFactory::identify($excelFile);
+        $excelReader = \PHPExcel_IOFactory::createReader($excelType);
+
+        if(strtoupper($excelType) == 'CSV') {
+            $excelReader->setInputEncoding('GBK');
+        }
+
+        if ($startRow && $endRow) {
+            $excelFilter           = new PHPExcelReadFilter();
+            $excelFilter->startRow = $startRow;
+            $excelFilter->endRow   = $endRow;
+            $excelReader->setReadFilter($excelFilter);
+        }
+
+        $phpexcel    = $excelReader->load($excelFile);
+        $activeSheet = $phpexcel->getActiveSheet();
+
+        $highestColumn      = $activeSheet->getHighestColumn(); //最后列数所对应的字母，例如第1行就是A
+        $highestColumnIndex = \PHPExcel_Cell::columnIndexFromString($highestColumn); //总列数
+
+        $data = array();
+        for ($row = $startRow; $row <= $endRow; $row++) {
+            for ($col = 0; $col < $highestColumnIndex; $col++) {
+                $data[$row][] = (string) $activeSheet->getCellByColumnAndRow($col, $row)->getValue();
+            }
+            if(implode($data[$row], '') == '') {
+                unset($data[$row]);
+            }
+        }
+        return $data;
     }
 
 }

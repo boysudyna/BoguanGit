@@ -36,6 +36,11 @@
             <input type="text" name="ltDou" placeholder="<" class="input-small" value="{{$reqData.ltDou}}">
         </div>
         <div class="input-group">
+            <span class="input-group-addon">终端月数</span>
+            <input type="text" name="egtMonth" placeholder=">=" class="input-small" value="{{$reqData.egtMonth}}">-
+            <input type="text" name="ltMonth" placeholder="<" class="input-small" value="{{$reqData.ltMonth}}">
+        </div>
+        <div class="input-group">
             <input type="text" name="phone" placeholder="电话号码" value="{{$reqData.phone}}">
         </div>
         {{:widget('Toolbar/select',['name'=>'abnormal', 'arr'=>[0=>'正常',1=>'异常',-1=>'=ALL='], 'select'=>$reqData.abnormal])}}
@@ -68,6 +73,7 @@
                                 <th>终端月数</th>
                                 <th>保底套餐</th>
                                 <th>分拉状态</th>
+                                <th>分数</th>
                             </tr>
                         </thead>
 
@@ -92,6 +98,7 @@
                                 <td>{{$vo.up_used_month}}</td>
                                 <td>{{$vo.up_is_minimum}}</td>
                                 <td>{{$vo.up_abnormal}}</td>
+                                <td>{{:action('StagedController/countScore', ['list'=>$vo])}}</td>
                             </tr>
                             {{/volist}}
                         </tbody>
