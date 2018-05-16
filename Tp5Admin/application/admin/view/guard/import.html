@@ -1,0 +1,140 @@
+<div class="page-content">
+   
+    <div class="page-header">
+        <h1>
+            数据查询
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                手机保障-导入
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    {{if condition="$totalMoney"}}
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
+        当前查询总金额为：{{$totalMoney}}
+    </div>
+    {{/if}}
+    
+    <link href="/static/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <form name="formSearch" id="formSearch" class="form-inline form-group" role="form" method="POST" action="{{:url('import')}}">
+        <!-- <input type="file" class="btn btn-xs btn-primary form-group" value="File" id="uploadFile" multiple="true"> -->
+        <div class="input-group"><span class="input-group-addon">选择文件</span>{{$dir}}</div>
+        <div class="input-group"><span class="input-group-addon">电话号码</span>
+            <input type="text" name="phone" placeholder="电话号码" value="{{$reqData.phone}}">
+        </div>
+
+        <div class="input-group"><span class="input-group-addon">读取位置</span>
+            <input type="text" name="begLine" placeholder="从N行开始" class="input-small" value="{{$reqData.begLine}}">
+        </div>
+        <div class="input-group"><span class="input-group-addon">条数</span>
+            <input type="text" name="nums" placeholder=">=" class="input-small" value="{{$reqData.nums}}">
+        </div>
+
+        <input type="submit" class="btn btn-sm btn-info form-group" name="Import" value="Search">
+
+        <!--用来存放文件信息-->
+<!--         <div class="input-group">
+            <div id="thelist" class="uploader-list"></div>
+            <div class="btns">
+                <div id="picker">导入文件</div>
+            </div>
+        </div> -->
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <table id="simple-table" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="center">
+                                    搜索结果展示
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                {{if($showStr)}}
+                                    {{$showStr}}
+                                {{/if}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- /.span -->
+            </div><!-- /.row -->
+             
+            <!-- PAGE CONTENT ENDS -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+
+<script src="/static/webuploader/webuploader.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    var uploader = WebUploader.create({
+        // swf文件路径
+        swf: '/static/webuploader/Uploader.swf',
+
+        // 文件接收服务端。
+        server: "{{:url('upload')}}", // 因为是demo，就拿着uploadify的php来用一下
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#picker',
+
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false,
+        auto: true,
+        headers: {'userName': 'emi', 'token': '123456'},
+        // accept: {
+        //   title: 'Images',
+        //   extensions: 'jpg,jpeg,png',
+        //   mimeTypes: 'image/jpg,image/jpeg,image/png'   //修改位置
+        // }
+    });
+// 当有文件被添加进队列的时候，添加到页面预览
+    uploader.on( 'fileQueued', function( file ) {
+        $('#thelist').append( '<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">等待上传...</p>' +
+            '</div>' );
+    });
+// 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+            $percent = $li.find('.progress .progress-bar');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<div class="progress progress-striped active">' +
+                '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                '</div>' +
+                '</div>').appendTo( $li ).find('.progress-bar');
+        }
+
+        $li.find('p.state').text('上传中');
+
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+    uploader.on( 'uploadSuccess', function( file , response) {
+        $( '#'+file.id ).find('p.state').text('上传成功');
+        alert(response + "\r\n 页面将自动刷新");
+    });
+
+    uploader.on( 'uploadError', function( file ) {
+        $( '#'+file.id ).find('p.state').text('上传出错');
+    });
+
+    uploader.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').fadeOut();
+        location.reload();
+    });
+});
+</script>
